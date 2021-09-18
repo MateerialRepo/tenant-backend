@@ -31,7 +31,9 @@ class AuthController extends Controller
         }
     }
 
-
+    public function user(){
+        return Auth::user();
+    }
 
     public function logout(Request $request){
         $user = Auth::user()->token();
@@ -46,16 +48,20 @@ class AuthController extends Controller
     public function registration(RegisterRequest $request){
 
        try{
-            User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'phone_number' => $request->phone_number,
-                'role_id'=>4,
-                'password' => bcrypt($request->password),
-            ]);        
 
-            $data['status'] = 'success';
+            $tenantid = "TNT-".Str::random(10)."-BRC";
+
+            $user = new User;
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->phone_number = $request->phone_number;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->role_id = 4;
+            $user->tenantid = $tenantid;
+            $user->save();
+
+            $data['status'] = 'Success';
             $data['message'] = 'Registration Successful';
             return response()->json($data, 201);
 

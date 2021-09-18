@@ -28,15 +28,14 @@ Route::get('/test', function(){
 Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'registration']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/login', [AuthController::class, 'login']);
     Route::post('/password/forgot', [ForgotPasswordController::class, 'forgot']);
     Route::post('/password/reset', [ForgotPasswordController::class, 'reset']);
 });
 
 
 Route::middleware('auth:api')->prefix('v1')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('/user', [AuthController::class, 'user'] );
     Route::post('/logout', [AuthController::class, 'logout'] );
 });
 

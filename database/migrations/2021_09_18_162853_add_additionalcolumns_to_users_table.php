@@ -29,7 +29,7 @@ class AddAdditionalcolumnsToUsersTable extends Migration
             $table->string('profile_pic')->nullable(); 
             $table->enum('KYC_type', ['BVN', 'NIN'])->nullable()->after('KYC_status'); 
             $table->string('KYC_id')->nullable()->after('KYC_type');
-            $table->unsignedBigInteger('role_id');
+            $table->foreignId('role_id')->constrained('roles');
         });
     }
 
