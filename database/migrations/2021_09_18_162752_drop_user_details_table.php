@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableUsers extends Migration
+class DropUserDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,7 @@ class AlterTableUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('KYC_status', ['completed', 'uncompleted'])->default('uncompleted')->after('email');
-        });
-        //
+        Schema::dropIfExists('user_details');
     }
 
     /**
@@ -27,8 +24,5 @@ class AlterTableUsers extends Migration
     public function down()
     {
         //
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['KYC_status']);
-        });
     }
 }

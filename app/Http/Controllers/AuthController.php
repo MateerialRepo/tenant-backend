@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Str;
+use Laravel\Passport\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use App\Models\UserDetail;
-use Illuminate\Support\Facades\Validator;
-use Laravel\Passport\Token;
+use App\Http\Requests\RegisterRequest;
 
 
 class AuthController extends Controller
@@ -17,15 +17,17 @@ class AuthController extends Controller
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
-            $responseArray = [];
-            $responseArray['token'] = $user->createToken('api-application')->accessToken;
-            $responseArray['user_id'] = $user->id;
-            $responseArray['email'] = $user->email;
-            return response()->json($responseArray, 200);
+            $token = $user->createToken('api-application')->accessToken;
+            $user['password'] = '';
+            $data['status'] = 'Success';
+            $data['message'] = 'Login Successful';
+            $data['token'] = $token;
+            $data['user'] = $user;
+            return response()->json($data, 200);
         }else{
-            $responseArray['status'] = 'Failed';
-            $responseArray['message'] = 'Invalid Email or Password';
-            return response()->json($responseArray, 401);
+            $data['status'] = 'Failed';
+            $data['message'] = 'Invalid Email or Password';
+            return response()->json($data, 401);
         }
     }
 
@@ -34,42 +36,37 @@ class AuthController extends Controller
     public function logout(Request $request){
         $user = Auth::user()->token();
         $user->revoke();
-        $responseArray['status'] = 'Success';
-        $responseArray['message']= 'Successfully logged out';
-        return response()->json($responseArray, 200);
+        $data['status'] = 'Success';
+        $data['message']= 'Successfully logged out';
+        return response()->json($data, 200);
     }
 
 
 
-    public function registration(Request $request){
-        $validator = Validator::make($request->all(), [
-            'firstname' => 'required|string' ,
-            'lastname' => 'required|string' ,
-            'phone_number' => 'required|numeric' ,
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|confirmed',
-            'password_confirmation' => 'required|string|same:password'
-        ]);
-      
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 404);
-        }
+    public function registration(RegisterRequest $request){
 
-        $user = new User;
-        $user->name = $request->input('firstname')." ".$request->input('lastname');
-        $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
-        $user->save();
+       try{
+            User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'role_id'=>4,
+                'password' => bcrypt($request->password),
+            ]);        
 
-        $user_id = User::max('id');
-        $user_detail = new UserDetail;
-        $user_detail->user_id = $user_id;
-        $user_detail->phone_number = $request->input('phone_number');
-        $user_detail->save();
+            $data['status'] = 'success';
+            $data['message'] = 'Registration Successful';
+            return response()->json($data, 201);
 
-        $responseArray['status'] = 'success';
-        $responseArray['message'] = 'Registration Successful';
-        return response()->json($responseArray, 201);
+       } catch (\Exception $exception) {
+
+            $data['status'] = 'Failed';
+            $data['message'] = $exception->getMessage();
+            return response()->json($data, 400);
+
+       }
+        
         
     }
 }

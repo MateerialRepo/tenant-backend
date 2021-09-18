@@ -18,10 +18,24 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
-        'KYC_status',
+        'tenantid',
+        'phone_number',
+        'gender',
+        'dob',
+        'occupation',
+        'address',
+        'landMark',
+        'state',
+        'country',
+        'profile_pic',
+        'KYC_type',
+        'KYC_id',
+        'role',
+
     ];
 
     /**

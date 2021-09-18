@@ -1,1 +1,1 @@
-Change your password here: <a href="{{ url('password/reset', $token) }} ">RESET PASSWORD</a> 
+Change your password here: <a href="https://breics-tenant-frontend.netlify.app/auth/reset-password/{{$token}} ">RESET PASSWORD</a> 
