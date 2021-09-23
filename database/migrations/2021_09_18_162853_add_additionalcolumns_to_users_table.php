@@ -23,7 +23,7 @@ class AddAdditionalcolumnsToUsersTable extends Migration
             $table->date('dob')->nullable()->after('gender');
             $table->string('occupation')->nullable()->after('dob');
             $table->string('address')->nullable(); 
-            $table->string('landMark')->nullable(); 
+            $table->string('landmark')->nullable(); 
             $table->string('state')->nullable(); 
             $table->string('country')->nullable();
             $table->string('profile_pic')->nullable(); 
