@@ -61,7 +61,7 @@ class UserRefereeController extends Controller
             $userReferee->save();
 
             $data['status'] = 'Success';
-            $data['message'] = 'Next of Kin Update Successful';
+            $data['message'] = 'Referee Update Successful';
             return response()->json($data, 200);
 
        } catch (\Exception $exception) {
