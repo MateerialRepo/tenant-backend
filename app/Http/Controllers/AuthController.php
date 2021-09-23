@@ -31,9 +31,7 @@ class AuthController extends Controller
         }
     }
 
-    public function user(){
-        return Auth::user();
-    }
+    
 
     public function logout(Request $request){
         $user = Auth::user()->token();

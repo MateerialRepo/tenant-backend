@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserRefereeController;
+use App\Http\Controllers\UserNextOfKinController;
 use App\Http\Controllers\ForgotPasswordController;
 
 /*
@@ -35,7 +37,15 @@ Route::prefix('v1')->group(function () {
 
 
 Route::middleware('auth:api')->prefix('v1')->group(function () {
-    Route::get('/user', [AuthController::class, 'user'] );
+    Route::get('/user', [UserController::class, 'user'] ); //works
+    Route::post('/next-of-kin/{user_id}', [UserNextOfKinController::class, 'store'] ); //works
+    Route::put('/next-of-kin/{user_id}', [UserNextOfKinController::class, 'update'] ); //works
+    Route::post('/referee/{user_id}', [UserRefereeController::class, 'store'] ); //works
+    Route::put('/referee/{user_id}', [UserRefereeController::class, 'update'] ); //works
+    Route::put('/user/{id}', [UserController::class, 'updateProfile'] );
+    Route::post('/user-kyc-update/{id}', [UserController::class, 'updateUserKYC'] );
+    Route::post('/user-profile-pic/{id}', [UserController::class, 'uploadprofilepic'] );
+    Route::post('/user-password-update/{id}', [UserController::class, 'updatepassword'] );
     Route::post('/logout', [AuthController::class, 'logout'] );
 });
 

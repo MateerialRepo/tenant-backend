@@ -20,22 +20,22 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
-        'email',
-        'password',
         'tenantid',
+        'email',
         'phone_number',
+        'KYC_status',
+        'KYC_type',
+        'KYC_id',
+        'password',
         'gender',
         'dob',
         'occupation',
         'address',
-        'landMark',
+        'landmark',
         'state',
         'country',
         'profile_pic',
-        'KYC_type',
-        'KYC_id',
-        'role',
-
+        'role_id',
     ];
 
     /**
@@ -56,4 +56,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function userNextOfKin(){
+        return $this->hasOne(UserNextOfKin::class);
+    }
+
+    public function userReferee(){
+        return $this->hasOne(UserReferee::class);
+    }
 }
