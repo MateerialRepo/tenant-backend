@@ -28,13 +28,13 @@ class UpdateUserProfileRequest extends FormRequest
             'last_name' => 'required|string' ,
             'phone_number' => 'required|numeric' ,
             'email' => 'required|email',
-            'dob' => 'required|date|nullable',
-            'occupation' => 'required|string|nullable',
+            'dob' => 'date|nullable',
+            'occupation' => 'string|nullable',
             'gender' => 'required|string',
-            'address' => 'required|string|nullable',
-            'landmark' => 'required|string|nullable',
-            'state' => 'required|string|nullable',
-            'country' => 'required|string|nullable'
+            'address' => 'string|nullable',
+            'landmark' => 'string|nullable',
+            'state' => 'string|nullable',
+            'country' => 'string|nullable'
         ];
     }
 }
