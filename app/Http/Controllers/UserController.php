@@ -18,11 +18,11 @@ class UserController extends Controller
 {
 
     public function user(){
-        return Auth::user();
+        return Auth::user()->load('userNextOfKin', 'userReferee');;
     }
 
 
-    public function updatepassword(Request $request, $id){
+    public function updatepassword(Request $request){
         try{
 
             $validator = Validator::make($request->all(), [
@@ -41,11 +41,14 @@ class UserController extends Controller
                 return response()->json(['error'=>'Current password does not match!'], 401);
             }
 
-            $user = User::find($id);
-            $user->password = Hash::make($request->new_password);
-            $user->save();
+            $user->update(
+                ['password' => Hash::make($request->new_password)]
+            );
 
-            return response()->json(['success'=>'Password updated successfully!'], 200);
+
+            $data['status'] = 'Success';
+            $data['message'] = 'Password Updated Successfully';
+            return response()->json($data, 204);
 
         }catch(\Exception $exception){
             $data['status'] = 'Failed';
@@ -55,26 +58,31 @@ class UserController extends Controller
     }
 
 
-    public function updateProfile(UpdateUserProfileRequest $request, $id)
+    public function updateProfile(UpdateUserProfileRequest $request)
     {
         //
         try{
-            $user = User::findorfail($id);
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->phone_number = $request->phone_number;
-            $user->email = $request->email;
-            $user->dob = $request->dob;
-            $user->occupation = $request->occupation;
-            $user->gender = $request->gender;
-            $user->address = $request->address;
-            $user->landmark = $request->landmark;
-            $user->state = $request->state;
-            $user->country = $request->country;
-            $user->save();
+            
+            $user = Auth::user();
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'dob' => $request->dob,
+                'occupation' => $request->occupation,
+                'gender' => $request->gender,
+                'address' => $request->address,
+                'landmark' => $request->landmark,
+                'state'=> $request->state,
+                'country' => $request->country
+                ]);
+
+            $user = Auth::user()->load('userNextOfKin', 'userReferee');
 
             $data['status'] = 'Success';
             $data['message'] = 'User Profile Update Successful';
+            $data['data'] = $user;
             return response()->json($data, 200);
 
        } catch (\Exception $exception) {
@@ -87,7 +95,7 @@ class UserController extends Controller
     }
 
    
-    public function updateUserKYC(Request $request, $id){
+    public function updateUserKYC(Request $request){
 
         try{
 
@@ -100,19 +108,21 @@ class UserController extends Controller
             }
             
             $idVerification = time().'.'.$request->kyc_img->extension();
+
+            $user = Auth::user();
+            $user->update([
+                'KYC_status' => "completed",
+                'KYC_type' => "NIN",
+                'KYC_id' => "/tenants/tenantkyc/".$idVerification
+                ]);
+            
             $request->kyc_img->move(public_path('/tenants/tenantkyc'), $idVerification);
 
-            $user = User::findorfail($id);
-            $user->KYC_status = "completed";
-            $user->KYC_type = "NIN";
-            $user->KYC_id = "/tenants/tenantkyc/".$idVerification;
-            $user->save();
-
-            
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'KYC Image Successfully Uploaded'
-            ], 200);
+            $user = Auth::user()->load('userNextOfKin', 'userReferee');            
+            $data['status'] = 'Success';
+            $data['message'] = 'KYC Image Successfully Uploaded';
+            $data['data'] = $user;
+            return response()->json($data, 200);
 
         } catch (\Exception $exception) {
             $data['status'] = 'Failed';
@@ -122,7 +132,7 @@ class UserController extends Controller
 
     }
 
-    public function uploadprofilepic(Request $request, $id){
+    public function uploadprofilepic(Request $request){
 
         try{
 
@@ -135,15 +145,18 @@ class UserController extends Controller
             }
             
             $profilepic = time().'.'.$request->profile_pic->extension();
+
+            $user = Auth::user();
+            $user->update([
+                'profile_pic' => "/tenants/tenantprofilepic/".$profilepic
+                ]);
+
             $request->profile_pic->move(public_path('/tenants/tenantprofilepic'), $profilepic);
 
-            $user = User::findorfail($id);
-            $user->profile_pic = "/tenants/tenantprofilepic/".$profilepic;
-            $user->save();
-
+            $user = Auth::user()->load('userNextOfKin', 'userReferee');            
             $data['status'] = 'Success';
             $data['message'] = 'Profile Pic Uploaded Successfully';
-            $data['profile_pic'] = "/tenants/tenantprofilepic/".$profilepic;
+            $data['data'] = $user;
             
             return response()->json($data, 200);
 

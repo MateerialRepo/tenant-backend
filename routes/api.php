@@ -30,7 +30,6 @@ Route::get('/test', function(){
 Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'registration']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/login', [AuthController::class, 'login']);
     Route::post('/password/forgot', [ForgotPasswordController::class, 'forgot']);
     Route::post('/password/reset', [ForgotPasswordController::class, 'reset']);
 });
@@ -38,22 +37,15 @@ Route::prefix('v1')->group(function () {
 
 Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::get('/user', [UserController::class, 'user'] ); //works
-    Route::post('/next-of-kin/{user_id}', [UserNextOfKinController::class, 'store'] ); //works
-    Route::put('/next-of-kin/{user_id}', [UserNextOfKinController::class, 'update'] ); //works
-    Route::post('/referee/{user_id}', [UserRefereeController::class, 'store'] ); //works
-    Route::put('/referee/{user_id}', [UserRefereeController::class, 'update'] ); //works
-    Route::put('/user/{id}', [UserController::class, 'updateProfile'] );
-    Route::post('/user-kyc-update/{id}', [UserController::class, 'updateUserKYC'] );
-    Route::post('/user-profile-pic/{id}', [UserController::class, 'uploadprofilepic'] );
-    Route::post('/user-password-update/{id}', [UserController::class, 'updatepassword'] );
+    Route::post('/next-of-kin', [UserNextOfKinController::class, 'createAndUpdate'] ); //
+    Route::post('/referee', [UserRefereeController::class, 'createAndUpdate'] ); 
+    Route::post('/user', [UserController::class, 'updateProfile'] );
+    Route::post('/user-kyc-update', [UserController::class, 'updateUserKYC'] );
+    Route::post('/user-profile-pic', [UserController::class, 'uploadprofilepic'] );
+    Route::post('/user-password-update', [UserController::class, 'updatepassword'] );
     Route::post('/logout', [AuthController::class, 'logout'] );
 });
 
-
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
 
 
