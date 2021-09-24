@@ -48,7 +48,7 @@ class UserController extends Controller
 
             $data['status'] = 'Success';
             $data['message'] = 'Password Updated Successfully';
-            return response()->json($data, 204);
+            return response()->json($data, 200);
 
         }catch(\Exception $exception){
             $data['status'] = 'Failed';
