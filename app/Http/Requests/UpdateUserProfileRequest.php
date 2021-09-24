@@ -30,7 +30,7 @@ class UpdateUserProfileRequest extends FormRequest
             'email' => 'required|email',
             'dob' => 'date|nullable',
             'occupation' => 'string|nullable',
-            'gender' => 'required|string',
+            'gender' => 'string',
             'address' => 'string|nullable',
             'landmark' => 'string|nullable',
             'state' => 'string|nullable',
