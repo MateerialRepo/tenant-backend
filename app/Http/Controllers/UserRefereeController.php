@@ -46,29 +46,6 @@ class UserRefereeController extends Controller
        }
     }
 
-    // public function update(UserRefereeRequest $request, $user_id){
-    //     try{
-
-    //         $userReferee = UserReferee::where('user_id', $user_id)->first();
-    //         $userReferee->first_name = $request->first_name;
-    //         $userReferee->last_name = $request->last_name;
-    //         $userReferee->phone_number = $request->phone_number;
-    //         $userReferee->email = $request->email;
-    //         $userReferee->address = $request->address;
-    //         $userReferee->save();
-
-    //         $data['status'] = 'Success';
-    //         $data['message'] = 'Referee Update Successful';
-    //         return response()->json($data, 200);
-
-    //    } catch (\Exception $exception) {
-
-    //         $data['status'] = 'Failed';
-    //         $data['message'] = $exception->getMessage();
-    //         return response()->json($data, 400);
-
-    //    }
-    // }
 
     public function destroy(Request $request){
 

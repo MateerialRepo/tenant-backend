@@ -16,6 +16,6 @@ class UserNextOfKin extends Model
     protected $fillable = [ 'user_id', 'first_name', 'last_name', 'email', 'phone_number', 'relationship' ];
 
     public function user(){
-        return $this->belongsTo(Car::class);
+        return $this->belongsTo(User::class);
     }
 }

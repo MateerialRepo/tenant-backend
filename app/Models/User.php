@@ -64,4 +64,12 @@ class User extends Authenticatable
     public function userReferee(){
         return $this->hasOne(UserReferee::class);
     }
+
+    public function ticket(){
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function document(){
+        return $this->hasMany(Document::class);
+    }
 }
