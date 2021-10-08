@@ -17,6 +17,7 @@ return [
         'guard' => 'web',
         'passwords' => 'users',
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -45,6 +46,12 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
             // 'hash' => false,
+        ],
+        
+        'landlord' => [
+            'driver' => 'session',
+            'provider' => 'landlords',
+            // 'hash' => false,
         ] 
     ],
 
@@ -71,6 +78,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        'landlords' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Landlord::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

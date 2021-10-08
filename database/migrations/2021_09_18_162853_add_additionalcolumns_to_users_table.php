@@ -17,7 +17,7 @@ class AddAdditionalcolumnsToUsersTable extends Migration
             $table->dropColumn('name');
             $table->string('first_name')->nullable()->after('id');
             $table->string('last_name')->nullable()->after('first_name');
-            $table->string('tenantid')->nullable()->after('last_name'); 
+            $table->string('breicsid')->nullable()->after('last_name'); 
             $table->string('phone_number')->nullable()->after('email'); 
             $table->enum('gender', ['male', 'female'])->nullable()->after('password');
             $table->date('dob')->nullable()->after('gender');
@@ -27,7 +27,7 @@ class AddAdditionalcolumnsToUsersTable extends Migration
             $table->string('state')->nullable(); 
             $table->string('country')->nullable();
             $table->string('profile_pic')->nullable(); 
-            $table->enum('KYC_type', ['BVN', 'NIN'])->nullable()->after('KYC_status'); 
+            $table->string('KYC_type')->nullable()->after('KYC_status'); 
             $table->string('KYC_id')->nullable()->after('KYC_type');
             $table->foreignId('role_id')->constrained('roles');
         });

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class TicketController extends Controller
 {
     //create or Update Ticket
-    public function createAndUpdate(TicketRequest $request){
+    public function createAndUpdate(Request $request){
         try{
 
             $validator = Validator::make($request->all(), [

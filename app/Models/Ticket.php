@@ -11,6 +11,7 @@ class Ticket extends Model
 
     protected $casts = [
         'ticket_img' => 'array',
+        // 'assigned_id' => 'array',
     ];
 
     protected $fillable = [ 
@@ -21,7 +22,7 @@ class Ticket extends Model
         'ticket_category', 
         'description' ,
         'ticket_img', 
-        'assigned_to'
+        'assigned_id'
     ];
 
 
@@ -34,6 +35,16 @@ class Ticket extends Model
     {
         return json_decode($value);
     }
+
+    // public function setAssignedIdAttribute($value)
+    // {
+    //     $this->attributes['assigned_id'] = json_encode($value);
+    // }
+
+    // public function getAssignedIdAttribute($value)
+    // {
+    //     return json_decode($value);
+    // }
 
     public function ticketComment(){
         return $this->hasMany(TicketComment::class);

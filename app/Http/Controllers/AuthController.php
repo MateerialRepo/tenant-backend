@@ -56,7 +56,7 @@ class AuthController extends Controller
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->role_id = 4;
-            $user->tenantid = $tenantid;
+            $user->breicsid = $tenantid;
             $user->save();
 
             $data['status'] = 'Success';
@@ -73,4 +73,37 @@ class AuthController extends Controller
         
         
     }
+
+    public function landlordRegistration(RegisterRequest $request){
+
+        try{
+ 
+             $landlordid = "LND-".Str::random(10)."-BRC";
+ 
+             $landlord = new User;
+             $landlord->first_name = $request->first_name;
+             $landlord->last_name = $request->last_name;
+             $landlord->phone_number = $request->phone_number;
+             $landlord->email = $request->email;
+             $landlord->password = bcrypt($request->password);
+             $landlord->role_id = 2;
+             $landlord->breicsid = $landlordid;
+             $landlord->save();
+ 
+             $data['status'] = 'Success';
+             $data['message'] = 'Registration Successful';
+             return response()->json($data, 201);
+ 
+        } catch (\Exception $exception) {
+ 
+             $data['status'] = 'Failed';
+             $data['message'] = $exception->getMessage();
+             return response()->json($data, 400);
+ 
+        }   
+         
+     }
+
+
+     
 }

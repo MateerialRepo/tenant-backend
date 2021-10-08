@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Landlord;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
@@ -91,4 +92,6 @@ class ForgotPasswordController extends Controller
             'message' => 'Password Reset Successfully'
         ], 200);
     }
+
+    
 }

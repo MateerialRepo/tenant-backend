@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\LandlordController;
 use App\Http\Controllers\AutoSearchController;
 use App\Http\Controllers\UserRefereeController;
 use App\Http\Controllers\UserNextOfKinController;
@@ -32,9 +33,11 @@ Route::get('/test', function(){
 
 Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'registration']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/password/forgot', [ForgotPasswordController::class, 'forgot']);
-    Route::post('/password/reset', [ForgotPasswordController::class, 'reset']);
+    Route::post('/login', [AuthController::class, 'login']); //works for both landlord and tenant
+    Route::post('/password/forgot', [ForgotPasswordController::class, 'forgot']);//works for both landlord and tenant
+    Route::post('/password/reset', [ForgotPasswordController::class, 'reset']);//works for both landlord and tenant
+
+    Route::post('/landlord/register', [AuthController::class, 'Landlordregistration']); //works for landlord
 });
 
 
@@ -54,7 +57,7 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
     //tickets or facilities
     Route::get('/ticket', [TicketController::class, 'fetchAll'] );
     Route::get('/ticket/{id}', [TicketController::class, 'fetchSingle'] );
-    Route::post('/ticket/create', [TicketController::class, 'createAndUpdate'] );
+    Route::post('/ticket/create', [TicketController::class, 'createAndUpdate'] ); //not working
     Route::post('/ticket/comment/{id}', [TicketController::class, 'ticketComment'] );
     Route::post('/ticket/resolve/{id}', [TicketController::class, 'resolveTicket'] );
     Route::post('/ticket/reopen/{id}', [TicketController::class, 'reopenTicket'] );
@@ -62,11 +65,23 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
     // Documents
     Route::get('/document', [DocumentController::class, 'fetchAllDocument'] );
     Route::get('/document/{id}', [DocumentController::class, 'fetchSingleDocument'] );
-    Route::post('/document/create', [DocumentController::class, 'createAndUpdate'] );
+    Route::post('/document/create', [DocumentController::class, 'createAndUpdate'] ); //not working
     Route::post('/document/delete/{id}', [DocumentController::class, 'deleteDocument'] );
 
 
 });
+
+
+Route::middleware(['auth:api', 'is_landlord'])->prefix('v1')->group(function () {
+    Route::get('/landlord', [LandlordController::class, 'landlord'] ); //works
+
+    Route::post('/landlord/kyc-update', [LandlordController::class, 'updateLandlordKYC'] );
+
+
+
+
+});
+
 
 
 

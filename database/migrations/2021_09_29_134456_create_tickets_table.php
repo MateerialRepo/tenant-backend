@@ -25,8 +25,7 @@ class CreateTicketsTable extends Migration
             $table->string('description')->nullable();
             $table->string('ticket_img')->nullable()->toArray();
             $table->foreignId('assigned_id')
-                    ->constrained('users')
-                    ->onDelete('cascade');
+                    ->constrained('users');
             $table->timestamps();
         });
     }
