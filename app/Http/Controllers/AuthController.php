@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 
 
@@ -54,7 +55,7 @@ class AuthController extends Controller
             $user->last_name = $request->last_name;
             $user->phone_number = $request->phone_number;
             $user->email = $request->email;
-            $user->password = bcrypt($request->password);
+            $user->password = bcrypt($request->password); //Hash::make($request->password);
             $user->role_id = 4;
             $user->breicsid = $tenantid;
             $user->save();

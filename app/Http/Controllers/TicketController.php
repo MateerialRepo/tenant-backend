@@ -27,7 +27,7 @@ class TicketController extends Controller
                 return response()->json(['error'=>$validator->errors()], 401);
             };
 
-            $ticket_unique_id = rand(1000000000,9999999999);
+            $ticket_unique_id = 'TKT-'.Str::random(7).'-'.time();;
 
             $ticket_collection=[];
 
@@ -38,7 +38,7 @@ class TicketController extends Controller
                     $ticketimage = time().rand(1,100).'.'.$ticket->extension();
                     $ticket->move(public_path('/tenants/ticketimages'), $ticketimage);
                     $ticketURL = '/tenants/ticketimages/'.$ticketimage;
-                    $ticket_collection[] = $ticketURL;
+                    array_push($ticket_collection, $ticketURL);
                 };
 
             };
@@ -71,9 +71,11 @@ class TicketController extends Controller
        }
     }
 
-    public function resolveTicket($id){
+
+
+    public function resolveTicket($unique_id){
         try{
-            $ticket = Ticket::find($id);
+            $ticket = Ticket::where('ticket_unique_id', $unique_id)->first();
             $ticket->ticket_status = 'Resolved';
             $ticket->save();
 
@@ -90,9 +92,9 @@ class TicketController extends Controller
          }
     }
 
-    public function reopenTicket($id){
+    public function reopenTicket($unique_id){
         try{
-            $ticket = Ticket::find($id);
+            $ticket = Ticket::where('ticket_unique_id', $unique_id)->first();
             $ticket->ticket_status = 'Open';
             $ticket->save();
 
@@ -114,9 +116,10 @@ class TicketController extends Controller
         try{
 
             $user = Auth::user();
-            $tickets = Ticket::where('user_id', $user->id)
-                        ->orWhere('assigned_id', $user->id)
-                        ->get();
+            $tickets = Ticket::where('user_id','=', $user->id)
+                        ->orWhere('assigned_id','=', $user->id)
+                        ->orderBy('created_at', 'desc')->get();
+
             $data['status'] = 'Success';
             $data['message'] = 'Tickets Fetched Successfully';
             $data['data'] = $tickets;
@@ -131,16 +134,12 @@ class TicketController extends Controller
     }
 
     // Fetch single ticket
-    public function fetchSingle($id){
+    public function fetchSingle($unique_id){
         try{
             $user = Auth::user();
 
-            $ticket = Ticket::where('id', $id)
-                        ->where(function($query) use ($user)  {    
-                            $query->where('user_id', $user->id)
-                                ->orwhere('assigned_id', $user->id);
-                            })
-                        ->with('ticketComment')->get();
+            $ticket = Ticket::where('ticket_unique_id', $unique_id)
+                        ->with('user', 'ticketComment')->get();
 
             if(!$ticket){
                 $data['status'] = 'Failed';
@@ -148,10 +147,34 @@ class TicketController extends Controller
                 return response()->json($data, 404);
             }
 
-            $data['status'] = 'Success';
-            $data['message'] = 'Ticket Fetched Successfully';
-            $data['data'] = $ticket;
-            return response()->json($data, 200);
+            // $ticket['user_id'] = $user->id;
+            // $ticket['user_first_name'] = $user->first_name;
+            // $ticket['user_last_name'] = $user->last_name;
+            // $ticket['user_picture'] = $user->profile_pic;
+            // $role = $user->role;
+            // switch ($role) {
+            //     case 1:
+            //         $ticket['user_role'] = 'Admin';
+            //         break;
+            //     case 2:
+            //         $ticket['user_role'] = 'Landlord';
+            //         break;
+            //     case 3:
+            //         $ticket['user_role'] = 'Agent';
+            //         break;
+            //     case 4:
+            //         $ticket['user_role'] = 'Tenant';
+            //         break;
+            //     default:
+            //         # code...
+            //         break;
+            // }
+
+            // id, firstname, lastname, image and role is fine
+            // $data['status'] = 'Success';
+            // $data['message'] = 'Ticket Fetched Successfully';
+            // $data['data'] = $ticket;
+            return response()->json($ticket, 200);
 
         } catch (\Exception $exception) {
 
@@ -186,6 +209,33 @@ class TicketController extends Controller
             return response()->json($data, 200);
 
         } catch (\Exception $exception) {
+            $data['status'] = 'Failed';
+            $data['message'] = $exception->getMessage();
+            return response()->json($data, 400);
+        }
+    }
+
+    public function deleteTicket($unique_id){
+        try{
+
+            $user = Auth::user();
+            $ticket = Ticket::where('ticket_unique_id', $unique_id)
+                        ->with('user', 'ticketComment')->get();
+
+            if(!$ticket){
+                $data['status'] = 'Failed';
+                $data['message'] = 'Ticket not found';
+                return response()->json($data, 404);
+            };
+
+            $ticket->delete();
+
+            $data['status'] = 'Success';
+            $data['message'] = 'Document Deleted Successfully';
+            return response()->json($data, 200);
+
+        } catch (\Exception $exception) {
+
             $data['status'] = 'Failed';
             $data['message'] = $exception->getMessage();
             return response()->json($data, 400);

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\UpdateUserProfileRequest;
 
 class LandlordController extends Controller
 {
@@ -52,7 +53,7 @@ class LandlordController extends Controller
     }
 
 
-    public function updateProfile(UpdateUserProfileRequest $request)
+    public function updateLandlord(UpdateUserProfileRequest $request)
     {
         //
         try{
@@ -72,10 +73,10 @@ class LandlordController extends Controller
                 'country' => $request->country
                 ]);
 
-            $user = Auth::user()->load('userNextOfKin', 'userReferee');
+            $user = Auth::user()->load('userReferee');
 
             $data['status'] = 'Success';
-            $data['message'] = 'User Profile Update Successful';
+            $data['message'] = 'Landlord Profile Update Successful';
             $data['data'] = $user;
             return response()->json($data, 200);
 
@@ -148,7 +149,7 @@ class LandlordController extends Controller
 
             $request->profile_pic->move(public_path('/landlords/landlordprofilepic'), $profilepic);
 
-            $user = Auth::user()->load('userNextOfKin', 'userReferee');            
+            $user = Auth::user()->load('userReferee');            
             $data['status'] = 'Success';
             $data['message'] = 'Profile Pic Uploaded Successfully';
             $data['data'] = $user;

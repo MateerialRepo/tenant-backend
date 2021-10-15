@@ -14,9 +14,9 @@ class DocumentController extends Controller
     public function fetchAllDocument(){
         $user = Auth::user();
 
-        $documents = Document::where('user_id', $user->id)
-                    ->orWhere('assigned_id', $user->id)
-                    ->get();
+        $documents = Document::where('user_id','=', $user->id)
+                    ->orWhere('assigned_id','=', $user->id)
+                    ->orderBy('created_at', 'desc')->get();
 
         $data['status'] = 'Success';
         $data['message'] = 'Tickets Fetched Successfully';
@@ -25,17 +25,13 @@ class DocumentController extends Controller
     }
 
     // fetch single document
-    public function fetchSingleDocument($id){
+    public function fetchSingleDocument($unique_id){
         try{
 
             $user = Auth::user();
 
-            $document = Document::where('id', $id)
-                        ->where(function($query) use ($user)  {    
-                            $query->where('user_id', $user->id)
-                                ->orwhere('assigned_id', $user->id);
-                            })
-                        ->first();
+            $document = Document::where('document_unique_id', $unique_id)
+                                ->with('user')->get();
 
             if(!$document){
                 $data['status'] = 'Failed';
@@ -67,14 +63,17 @@ class DocumentController extends Controller
 
             if ($validator->fails()) {
                 return response()->json(['error'=>$validator->errors()], 401);
-            }
+            };
+
+            $unique_id = 'DOC-'.Str::random(7).'-'.time();
 
             $user = Auth::user();
-            $document_unique_id = rand(1000000000,9999999999);
+        
+            $document_unique_id = $unique_id;
             
             $document_format = $request->document_file->extension();
 
-            $document = time().rand(1,100).'.'.$document_format;
+            $document = time().rand(1,1000).'.'.$document_format;
 
             $documentURL = '/tenants/documents/'.$document;
 
