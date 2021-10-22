@@ -1,0 +1,36 @@
+PROPERTY LISTINGS(DB Table):
+landlord_id*
+Property Title(string)*
+Verified(No/yes, 1/0)*
+Property Type(string)*
+Amount(numeric)*
+property images(Array/Json)*
+Serviced(Yes or No or Use Booleans i.e 0 or 1)*
+availabiity(available/occupied)*
+Year built(numeric)*
+Street Address(string)*
+Landmark(string)*
+LGA(string)(*)
+City(string)*
+State(string)*
+Country(string*)
+ZipCode*
+No_of_bedrooms(numeric)*
+No_of_bathrooms(numeric)*
+Parking Space(numeric or string???)*
+Preferred Religion(string)*
+Preferred tribe(string)*
+Preferred marital status*(string)
+Preferred employment status(string)*
+max_coResidents(numeric)
+Preferred gender(string)*
+amenities(array/json object)
+side attraction cat(string)
+side attraction details(string)
+
+
+PROPERTY VERIFICATION(DB TABLE):
+Property ID
+Document Type
+property document(array/json)
+Property description

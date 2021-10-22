@@ -7,10 +7,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LandlordController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\AutoSearchController;
 use App\Http\Controllers\UserRefereeController;
 use App\Http\Controllers\UserNextOfKinController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\PropertyVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +82,12 @@ Route::middleware(['auth:api', 'is_landlord'])->prefix('v1')->group(function () 
     Route::post('/landlord/profile-pic', [LandlordController::class, 'uploadprofilepic'] );//Done
     Route::post('/landlord/kyc', [LandlordController::class, 'updateLandlordKYC'] ); //Done
     Route::post('/landlord/kyc/update', [LandlordController::class, 'updateLandlordKYC'] );
-
+    
+    // Property routes
+    Route::get('/property', [PropertyController::class, 'index'] );
+    Route::get('/property/{id}', [PropertyController::class, 'getProperty'] );
+    Route::post('/property', [PropertyController::class, 'createAndUpdateProperty'] );
+    Route::post('/property/verify/{id}', [PropertyVerificationController::class, 'verifyProperty'] );
 
 });
 

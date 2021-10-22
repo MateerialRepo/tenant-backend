@@ -86,7 +86,7 @@ class LandlordController extends Controller
             $data['message'] = $exception->getMessage();
             return response()->json($data, 400);
 
-       }
+       }    
     }
 
    
